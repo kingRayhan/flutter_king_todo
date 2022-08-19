@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../constants.dart';
 
-class Project extends StatelessWidget {
+class ProjectCard extends StatelessWidget {
   final String? title;
   final String? description;
 
-  const Project({
+  const ProjectCard({
     Key? key,
     this.title,
     this.description,
@@ -28,16 +28,16 @@ class Project extends StatelessWidget {
           children: [
             Text(
               title ?? "(Untitled)",
-              style: TextStyle(color: Colors.white, fontSize: 18.0),
+              style: const TextStyle(color: Colors.white, fontSize: 18.0),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Text(
               description ?? "",
-              style: TextStyle(
+              style: const TextStyle(
                   color: Color(0xFF8A8A8A), fontSize: 16.0, height: 1.4),
             ),
-            SizedBox(height: 6),
-            Text(
+            const SizedBox(height: 6),
+            const Text(
               "1 of 3 tasks",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
             )
