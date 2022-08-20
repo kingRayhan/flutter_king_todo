@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:king_todo/models/project.dart';
 import 'package:king_todo/screens/project_screen.dart';
 import 'package:king_todo/widgets/CreateProjectBottomSheet.dart';
+import 'package:uuid/uuid.dart';
 
 import '../constants.dart';
 import '../widgets/project_card.dart';
@@ -13,6 +16,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Project> _projects = [];
+
+  _saveProject() async {
+    var uuid = Uuid();
+    var projects = await Hive.openBox<Project>('projects');
+    String _id = uuid.v4();
+    projects.put(
+        _id, Project(id: _id, title: "title 1", description: "description"));
+
+    print("Saving project..");
+  }
+
+  _getProjects() async {
+    var projects = await Hive.openBox<Project>('projects');
+    setState(() {
+      _projects = projects.values.toList();
+    });
+  }
+
+  @override
+  void initState() {
+    _getProjects();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,24 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
           behavior: ListViewScrollBehaviourNoGlow(),
           child: ListView(
             children: [
-              ProjectCard(
-                title: "In publishing and graphic",
-                description:
-                    "In publishing and graphic design, Lorem ipsum is a placeholder text commonly",
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProjectScreen()));
-                },
-              ),
-              const ProjectCard(),
-              const ProjectCard(),
-              const ProjectCard(),
-              const ProjectCard(),
-              const ProjectCard(),
-              const ProjectCard(),
-              const ProjectCard(),
+              for (Project project in _projects)
+                ProjectCard(
+                    title: project.title, description: project.description)
             ],
           ),
         ),
@@ -64,7 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: ((context) => Padding(
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: const CreateProjectBottomSheet(),
+            child: CreateProjectBottomSheet(
+              onSave: (project) {
+                // print(project.id);
+                _saveProject();
+              },
+            ),
           )),
     );
   }

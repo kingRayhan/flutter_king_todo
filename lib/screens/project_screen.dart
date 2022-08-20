@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:king_todo/models/project.dart';
 
 const List<Map<String, dynamic>> todos = [
   {"done": false, "text": "Buy milk"},
@@ -49,6 +50,8 @@ class ProjectScreen extends StatefulWidget {
 class _ProjectScreenState extends State<ProjectScreen> {
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Project;
+
     return Scaffold(
       appBar: AppBar(
         title: const TextField(
@@ -63,7 +66,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 18.0),
         child: ListView(
           children: [
-            _buildNewTodoInput(),
+            Text(args.title),
             for (var todo in todos)
               _buildTodoCard(text: todo["text"], isDone: todo["done"]),
           ],

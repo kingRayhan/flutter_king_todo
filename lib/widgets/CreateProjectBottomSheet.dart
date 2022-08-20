@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:king_todo/models/project.dart';
+import 'package:uuid/uuid.dart';
 
 import '../constants.dart';
 
 class CreateProjectBottomSheet extends StatefulWidget {
-  const CreateProjectBottomSheet({Key? key}) : super(key: key);
+  const CreateProjectBottomSheet({Key? key, this.onSave}) : super(key: key);
+  final Function(Project project)? onSave;
 
   @override
   _CreateProjectBottomSheetState createState() =>
@@ -13,6 +16,9 @@ class CreateProjectBottomSheet extends StatefulWidget {
 
 class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
   int descriptionLength = 0;
+
+  var _titleInputController = TextEditingController();
+  var _descriptionInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,7 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
           TextField(
             style: GoogleFonts.lato(fontSize: 18.0),
             maxLength: 50,
+            controller: _titleInputController,
             decoration: const InputDecoration(
               hintText: "Project Title",
               border: InputBorder.none,
@@ -41,6 +48,7 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
               minLines: 4,
               maxLines: null,
               maxLength: 130,
+              controller: _descriptionInputController,
               onChanged: (value) =>
                   setState(() => descriptionLength = value.length),
               decoration: const InputDecoration(
@@ -64,26 +72,36 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
               _buildProjectThemeColorSwatch(),
             ],
           ),
-          const SizedBox(height: 12.0),
-          GestureDetector(
-            onTap: () {
-              print("On save");
-            },
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
-                color: kAccentColor,
-                borderRadius: BorderRadius.circular(6.0),
-              ),
-              child: const Text(
-                "Save",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black, fontSize: 16.0),
-              ),
-            ),
-          )
+          const SizedBox(height: 18.0),
+          _saveButton(onPress: () {
+            var uuid = Uuid();
+            final project = Project(
+              title: _titleInputController.text,
+              description: _descriptionInputController.text,
+              id: uuid.v4(),
+            );
+            widget.onSave?.call(project);
+          }),
         ],
+      ),
+    );
+  }
+
+  GestureDetector _saveButton({required Function() onPress}) {
+    return GestureDetector(
+      onTap: onPress,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: kAccentColor,
+          borderRadius: BorderRadius.circular(6.0),
+        ),
+        child: const Text(
+          "Save",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black, fontSize: 16.0),
+        ),
       ),
     );
   }
