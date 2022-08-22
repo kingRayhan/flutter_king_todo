@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:form_validator/form_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:king_todo/models/project.dart';
 import 'package:uuid/uuid.dart';
@@ -16,9 +17,10 @@ class CreateProjectBottomSheet extends StatefulWidget {
 
 class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
   int descriptionLength = 0;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  var _titleInputController = TextEditingController();
-  var _descriptionInputController = TextEditingController();
+  final _titleInputController = TextEditingController();
+  final _descriptionInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +32,64 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
           color: const Color(0xFF191919),
           borderRadius: BorderRadius.circular(6.0)),
       height: 280.0,
-      child: Column(
-        children: [
-          TextField(
-            style: GoogleFonts.lato(fontSize: 18.0),
-            maxLength: 50,
-            controller: _titleInputController,
-            decoration: const InputDecoration(
-              hintText: "Project Title",
-              border: InputBorder.none,
-              counterText: "",
-            ),
-          ),
-          Expanded(
-            child: TextField(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
               style: GoogleFonts.lato(fontSize: 18.0),
-              minLines: 4,
-              maxLines: null,
-              maxLength: 130,
-              controller: _descriptionInputController,
-              onChanged: (value) =>
-                  setState(() => descriptionLength = value.length),
+              maxLength: 50,
+              validator: ValidationBuilder().required().maxLength(35).build(),
+              controller: _titleInputController,
               decoration: const InputDecoration(
-                  counterStyle: TextStyle(fontSize: 15.0),
-                  hintText: "Write something about the project...",
-                  border: OutlineInputBorder()),
+                hintText: "Project Title",
+                border: OutlineInputBorder(),
+                counterText: "",
+              ),
             ),
-          ),
-          SizedBox(height: 18.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildProjectThemeColorSwatch(color: Colors.yellow),
-              _buildProjectThemeColorSwatch(color: Colors.purple),
-              _buildProjectThemeColorSwatch(color: Colors.orange),
-              _buildProjectThemeColorSwatch(color: Colors.teal),
-              _buildProjectThemeColorSwatch(color: Colors.red),
-              _buildProjectThemeColorSwatch(color: Colors.limeAccent),
-              _buildProjectThemeColorSwatch(),
-              _buildProjectThemeColorSwatch(),
-              _buildProjectThemeColorSwatch(),
-            ],
-          ),
-          const SizedBox(height: 18.0),
-          _saveButton(onPress: () {
-            var uuid = Uuid();
-            final project = Project(
-              title: _titleInputController.text,
-              description: _descriptionInputController.text,
-              id: uuid.v4(),
-            );
-            widget.onSave?.call(project);
-          }),
-        ],
+            const SizedBox(height: 15.0),
+            Expanded(
+              child: TextFormField(
+                style: GoogleFonts.lato(fontSize: 18.0),
+                minLines: 4,
+                maxLines: null,
+                maxLength: 130,
+                controller: _descriptionInputController,
+                onChanged: (value) =>
+                    setState(() => descriptionLength = value.length),
+                decoration: const InputDecoration(
+                    counterStyle: TextStyle(fontSize: 15.0),
+                    hintText: "Write something about the project...",
+                    border: OutlineInputBorder()),
+              ),
+            ),
+            // SizedBox(height: 18.0),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     _buildProjectThemeColorSwatch(color: Colors.yellow),
+            //     _buildProjectThemeColorSwatch(color: Colors.purple),
+            //     _buildProjectThemeColorSwatch(color: Colors.orange),
+            //     _buildProjectThemeColorSwatch(color: Colors.teal),
+            //     _buildProjectThemeColorSwatch(color: Colors.red),
+            //     _buildProjectThemeColorSwatch(color: Colors.limeAccent),
+            //     _buildProjectThemeColorSwatch(),
+            //     _buildProjectThemeColorSwatch(),
+            //     _buildProjectThemeColorSwatch(),
+            //   ],
+            // ),
+            const SizedBox(height: 18.0),
+            _saveButton(onPress: () {
+              if (_formKey.currentState!.validate()) {
+                final project = Project(
+                    title: _titleInputController.text,
+                    description: _descriptionInputController.text);
+                widget.onSave?.call(project);
+                Navigator.pop(context);
+              }
+            }),
+          ],
+        ),
       ),
     );
   }
