@@ -28,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _getProjects() async {
-    var projects = await Hive.openBox<Project>(kProjectsDbName);
-    setState(() {
-      _projects = projects.values.toList();
-    });
+    // var projects = await Hive.openBox<Project>(kProjectsDbName);
+    // setState(() {
+    //   _projects = projects.values.toList();
+    // });
   }
 
   @override
@@ -55,12 +55,17 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ScrollConfiguration(
           behavior: ListViewScrollBehaviourNoGlow(),
-          child: ListView(
-            children: [
-              for (Project project in _projects)
-                ProjectCard(
-                    title: project.title, description: project.description)
-            ],
+          child: RefreshIndicator(
+            onRefresh: () {
+              return Future.delayed(Duration(seconds: 1));
+            },
+            child: ListView(
+              children: [
+                for (Project project in _projects)
+                  ProjectCard(
+                      title: project.title, description: project.description)
+              ],
+            ),
           ),
         ),
       ),

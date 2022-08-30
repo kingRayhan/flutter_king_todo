@@ -1,20 +1,32 @@
-import 'package:hive/hive.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:isar/isar.dart';
+
 part 'project.g.dart';
 
-@HiveType(typeId: 1)
+@Collection()
 class Project {
-  @HiveField(1)
+  @Id()
+  late int? id;
+
   late String title;
-
-  @HiveField(2)
-  late String description;
-
-  @HiveField(3)
+  late String? description;
   dynamic theme;
 
+  late DateTime? createdAt;
+  late DateTime? updatedAt;
+
   Project({
+    this.id,
     required this.title,
-    required this.description,
+    this.description,
     this.theme,
+    this.createdAt,
+    this.updatedAt,
   });
+
+  @override
+  String toString() {
+    return 'Project(id: $id, title: $title, description: $description, theme: $theme, createdAt: $createdAt, updatedAt: $updatedAt)';
+  }
 }

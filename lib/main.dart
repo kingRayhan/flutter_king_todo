@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:isar/isar.dart';
+import 'package:king_todo/models/project.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'constants.dart';
-import 'models/project.dart';
 import 'routes.dart';
 
 Future<void> main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(ProjectAdapter());
+  WidgetsFlutterBinding.ensureInitialized();
+  final appDir = await getApplicationDocumentsDirectory();
+  final isar = await Isar.open(
+    schemas: [ProjectSchema],
+    directory: appDir.path,
+  );
   runApp(const Main());
 }
 
@@ -31,7 +37,7 @@ class Main extends StatelessWidget {
         ),
         scaffoldBackgroundColor: kBackgroundColor,
       ),
-      initialRoute: '/',
+      initialRoute: '/splash',
       routes: app_routes,
     );
   }
