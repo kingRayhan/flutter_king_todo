@@ -31,6 +31,7 @@ class IsarDatabaseService {
 
     await isar.writeTxn((isar) async {
       project.createdAt ??= DateTime.now();
+      project.updatedAt ??= DateTime.now();
       var projectId = await isar.projects.put(project);
       print("Saved project with id: $projectId");
     });
@@ -49,7 +50,7 @@ class IsarDatabaseService {
     final isar = await _db;
     yield* isar.projects
         .where()
-        .sortByCreatedAtDesc()
+        .sortByUpdatedAtDesc()
         .watch(initialReturn: true);
   }
 }

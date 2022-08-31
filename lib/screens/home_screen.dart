@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:king_todo/models/project.dart';
 import 'package:king_todo/services/isar_service.dart';
-import 'package:king_todo/widgets/CreateProjectBottomSheet.dart';
+import 'package:king_todo/widgets/project_bottom_sheet.dart';
 
 import '../constants.dart';
 import '../widgets/project_card.dart';
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: kAccentColor,
-        onPressed: () => _buildBottomSheet(context),
+        onPressed: _buildBottomSheet,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
         child: const Icon(Icons.add),
       ),
@@ -42,12 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ScrollConfiguration(
           behavior: ListViewScrollBehaviourNoGlow(),
-          child: RefreshIndicator(
-            onRefresh: () {
-              return Future.delayed(Duration(seconds: 1));
-            },
-            child: _buildProjectList(),
-          ),
+          child: _buildProjectList(),
         ),
       ),
     );
@@ -66,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: snapshot.data![index].title,
                 description: snapshot.data![index].description,
                 onDelete: (id) => db.deleteProject(id),
+                onEdit: (id) =>
+                    _buildBottomSheet(project: snapshot.data![index]),
               );
             },
           );
@@ -83,18 +80,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<dynamic> _buildBottomSheet(BuildContext context) {
+  Future<dynamic> _buildBottomSheet({Project? project}) {
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: ((context) => Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            child: CreateProjectBottomSheet(
-              onSave: (project) => _saveProject(project),
-            ),
-          )),
+      builder: ((context) {
+        return Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: ProjectBottomSheet(
+            project: project,
+            onSave: (project) => _saveProject(project),
+          ),
+        );
+      }),
     );
   }
 }

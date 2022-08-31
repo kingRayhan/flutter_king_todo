@@ -5,16 +5,18 @@ import 'package:king_todo/models/project.dart';
 
 import '../constants.dart';
 
-class CreateProjectBottomSheet extends StatefulWidget {
-  const CreateProjectBottomSheet({Key? key, this.onSave}) : super(key: key);
+class ProjectBottomSheet extends StatefulWidget {
+  const ProjectBottomSheet({Key? key, this.onSave, this.project})
+      : super(key: key);
+
   final Function(Project project)? onSave;
+  final Project? project;
 
   @override
-  _CreateProjectBottomSheetState createState() =>
-      _CreateProjectBottomSheetState();
+  _ProjectBottomSheetState createState() => _ProjectBottomSheetState();
 }
 
-class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
+class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
   int descriptionLength = 0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -23,6 +25,14 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final _project = widget.project;
+
+    if (_project != null) {
+      _titleInputController.value = TextEditingValue(text: _project.title);
+      _descriptionInputController.value =
+          TextEditingValue(text: _project.description!);
+    }
+
     return Container(
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(12.0),
@@ -80,10 +90,13 @@ class _CreateProjectBottomSheetState extends State<CreateProjectBottomSheet> {
             const SizedBox(height: 18.0),
             _saveButton(onPress: () {
               if (_formKey.currentState!.validate()) {
-                final project = Project(
+                widget.onSave?.call(
+                  Project(
+                    id: _project?.id,
                     title: _titleInputController.text,
-                    description: _descriptionInputController.text);
-                widget.onSave?.call(project);
+                    description: _descriptionInputController.text,
+                  ),
+                );
                 Navigator.pop(context);
               }
             }),
