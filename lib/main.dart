@@ -10,11 +10,6 @@ import 'routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final appDir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open(
-    schemas: [ProjectSchema],
-    directory: appDir.path,
-  );
   runApp(const Main());
 }
 

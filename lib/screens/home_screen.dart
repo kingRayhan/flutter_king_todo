@@ -1,30 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:king_todo/models/project.dart';
+import 'package:king_todo/services/isar_service.dart';
 import 'package:king_todo/widgets/CreateProjectBottomSheet.dart';
 
 import '../constants.dart';
 import '../widgets/project_card.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Project> _projects = [];
+  final db = IsarDatabaseService();
+  final List<Project> _projects = [];
 
   _saveProject(Project project) async {
-    var projects = await Hive.openBox<Project>(kProjectsDbName);
-    projects.add(project);
-
-    setState(() {
-      _projects.add(project);
-    });
-
-    print("Saving project..");
+    await db.saveProject(project);
   }
 
   _getProjects() async {
@@ -32,11 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // setState(() {
     //   _projects = projects.values.toList();
     // });
-  }
-
-  @override
-  void initState() {
-    _getProjects();
   }
 
   @override
@@ -59,16 +46,40 @@ class _HomeScreenState extends State<HomeScreen> {
             onRefresh: () {
               return Future.delayed(Duration(seconds: 1));
             },
-            child: ListView(
-              children: [
-                for (Project project in _projects)
-                  ProjectCard(
-                      title: project.title, description: project.description)
-              ],
-            ),
+            child: _buildProjectList(),
           ),
         ),
       ),
+    );
+  }
+
+  StreamBuilder<List<Project>> _buildProjectList() {
+    return StreamBuilder(
+      stream: db.projectsStream(),
+      builder: (BuildContext context, AsyncSnapshot<List<Project>> snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ProjectCard(
+                id: snapshot.data![index].id,
+                title: snapshot.data![index].title,
+                description: snapshot.data![index].description,
+                onDelete: (id) => db.deleteProject(id),
+              );
+            },
+          );
+        }
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Text("No projects yet", style: TextStyle(fontSize: 18.0)),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -81,11 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom),
             child: CreateProjectBottomSheet(
-              onSave: (project) {
-                _saveProject(project);
-                print("title: ${project.title}");
-                print("description: ${project.description}");
-              },
+              onSave: (project) => _saveProject(project),
             ),
           )),
     );

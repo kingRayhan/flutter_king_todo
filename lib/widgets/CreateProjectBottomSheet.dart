@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:king_todo/models/project.dart';
-import 'package:uuid/uuid.dart';
 
 import '../constants.dart';
 

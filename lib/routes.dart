@@ -7,7 +7,7 @@ import 'screens/test_screen.dart';
 
 final Map<String, Widget Function(BuildContext)> app_routes = {
   '/splash': (context) => const SplashScreen(),
-  '/': (context) => const HomeScreen(),
+  '/': (context) => HomeScreen(),
   '/project': (context) => const ProjectScreen(),
   '/test': (context) => TestScreen()
 };
