@@ -77,21 +77,21 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
                     border: OutlineInputBorder()),
               ),
             ),
-            // SizedBox(height: 18.0),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     _buildProjectThemeColorSwatch(color: Colors.yellow),
-            //     _buildProjectThemeColorSwatch(color: Colors.purple),
-            //     _buildProjectThemeColorSwatch(color: Colors.orange),
-            //     _buildProjectThemeColorSwatch(color: Colors.teal),
-            //     _buildProjectThemeColorSwatch(color: Colors.red),
-            //     _buildProjectThemeColorSwatch(color: Colors.limeAccent),
-            //     _buildProjectThemeColorSwatch(),
-            //     _buildProjectThemeColorSwatch(),
-            //     _buildProjectThemeColorSwatch(),
-            //   ],
-            // ),
+            SizedBox(height: 18.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildProjectThemeColorSwatch(color: Colors.yellow),
+                _buildProjectThemeColorSwatch(color: Colors.purple),
+                _buildProjectThemeColorSwatch(color: Colors.orange),
+                _buildProjectThemeColorSwatch(color: Colors.teal),
+                _buildProjectThemeColorSwatch(color: Colors.red),
+                _buildProjectThemeColorSwatch(color: Colors.limeAccent),
+                _buildProjectThemeColorSwatch(),
+                _buildProjectThemeColorSwatch(),
+                _buildProjectThemeColorSwatch(),
+              ],
+            ),
             const SizedBox(height: 18.0),
             _saveButton(onPress: () {
               if (_formKey.currentState!.validate()) {
