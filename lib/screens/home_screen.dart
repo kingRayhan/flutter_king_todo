@@ -13,17 +13,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final db = IsarDatabaseService();
-  final List<Project> _projects = [];
 
   _saveProject(Project project) async {
     await db.saveProject(project);
   }
 
-  _getProjects() async {
-    // var projects = await Hive.openBox<Project>(kProjectsDbName);
-    // setState(() {
-    //   _projects = projects.values.toList();
-    // });
+  @override
+  void initState() {
+    print("Home screen init");
+
+    super.initState();
   }
 
   @override

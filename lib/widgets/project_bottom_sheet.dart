@@ -13,26 +13,31 @@ class ProjectBottomSheet extends StatefulWidget {
   final Project? project;
 
   @override
-  _ProjectBottomSheetState createState() => _ProjectBottomSheetState();
+  _ProjectBottomSheetState createState() => _ProjectBottomSheetState(project);
 }
 
 class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
   int descriptionLength = 0;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  Project? project;
+
+  _ProjectBottomSheetState(this.project);
 
   final _titleInputController = TextEditingController();
   final _descriptionInputController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    final _project = widget.project;
-
-    if (_project != null) {
-      _titleInputController.value = TextEditingValue(text: _project.title);
-      _descriptionInputController.value =
-          TextEditingValue(text: _project.description!);
+  void initState() {
+    if (project != null) {
+      _titleInputController.text = project!.title ?? "";
+      _descriptionInputController.text = project!.description ?? "";
     }
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(15.0),
       padding: const EdgeInsets.all(12.0),
@@ -92,7 +97,7 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
               if (_formKey.currentState!.validate()) {
                 widget.onSave?.call(
                   Project(
-                    id: _project?.id,
+                    id: project?.id,
                     title: _titleInputController.text,
                     description: _descriptionInputController.text,
                   ),
