@@ -40,14 +40,14 @@ const List<Map<String, dynamic>> todos = [
   {"done": false, "text": "Buy cheese"},
 ];
 
-class ProjectScreen extends StatefulWidget {
-  const ProjectScreen({Key? key}) : super(key: key);
+class TodosScreen extends StatefulWidget {
+  const TodosScreen({Key? key}) : super(key: key);
 
   @override
-  _ProjectScreenState createState() => _ProjectScreenState();
+  _TodosScreenState createState() => _TodosScreenState();
 }
 
-class _ProjectScreenState extends State<ProjectScreen> {
+class _TodosScreenState extends State<TodosScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Project;

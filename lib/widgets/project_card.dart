@@ -73,8 +73,8 @@ class ProjectCard extends StatelessWidget {
                           const TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      "1 of 3 tasks ${theme}",
+                    const Text(
+                      "1 of 3 tasks",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16.0),
                     )

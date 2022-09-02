@@ -6,12 +6,12 @@ import 'package:king_todo/widgets/project_bottom_sheet.dart';
 import '../constants.dart';
 import '../widgets/project_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class ProjectsScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _ProjectsScreenState createState() => _ProjectsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProjectsScreenState extends State<ProjectsScreen> {
   final db = IsarDatabaseService();
 
   _saveProject(Project project) async {
@@ -55,6 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 onEdit: (id) =>
                     _buildBottomSheet(project: snapshot.data![index]),
                 theme: snapshot.data![index].theme,
+                onTap: () => {
+                  Navigator.pushNamed(
+                    context,
+                    '/todos',
+                    arguments: snapshot.data![index],
+                  ),
+                },
               );
             },
           );

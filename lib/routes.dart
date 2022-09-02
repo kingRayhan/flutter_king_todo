@@ -1,12 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:king_todo/screens/splash_screen.dart';
 
-import 'screens/home_screen.dart';
-import 'screens/project_screen.dart';
-import 'screens/test_screen.dart';
+import 'screens/projects_screen.dart';
+import 'screens/todos_screen.dart';
 
+// ignore: non_constant_identifier_names
 final Map<String, Widget Function(BuildContext)> app_routes = {
   '/splash': (context) => const SplashScreen(),
-  '/home': (context) => HomeScreen(),
-  '/project': (context) => const ProjectScreen(),
+  '/home': (context) => ProjectsScreen(),
+  '/todos': (context) => const TodosScreen(),
 };
