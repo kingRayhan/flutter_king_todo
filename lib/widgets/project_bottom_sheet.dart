@@ -24,13 +24,23 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
   _ProjectBottomSheetState(this.project);
 
   final _titleInputController = TextEditingController();
-  final _descriptionInputController = TextEditingController();
+  final _themeInputController = TextEditingController();
+  final List<Color> _themes = [
+    Colors.blue,
+    Colors.red,
+    Colors.green,
+    Colors.purple,
+    Colors.orange,
+    Colors.pink,
+    Colors.teal,
+    Colors.indigo
+  ];
 
   @override
   void initState() {
     if (project != null) {
       _titleInputController.text = project!.title ?? "";
-      _descriptionInputController.text = project!.description ?? "";
+      _themeInputController.text = project!.theme.toString();
     }
 
     super.initState();
@@ -45,7 +55,7 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
           border: Border.all(color: Color(0xFF3D3D3D)),
           color: const Color(0xFF191919),
           borderRadius: BorderRadius.circular(6.0)),
-      height: 280.0,
+      height: 220.0,
       child: Form(
         key: _formKey,
         child: Column(
@@ -61,35 +71,21 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
                 counterText: "",
               ),
             ),
-            const SizedBox(height: 15.0),
-            Expanded(
-              child: TextFormField(
-                style: GoogleFonts.lato(fontSize: 18.0),
-                minLines: 4,
-                maxLines: null,
-                maxLength: 130,
-                controller: _descriptionInputController,
-                onChanged: (value) =>
-                    setState(() => descriptionLength = value.length),
-                decoration: const InputDecoration(
-                    counterStyle: TextStyle(fontSize: 15.0),
-                    hintText: "Write something about the project...",
-                    border: OutlineInputBorder()),
-              ),
-            ),
-            SizedBox(height: 18.0),
+            const SizedBox(height: 18.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildProjectThemeColorSwatch(color: Colors.yellow),
-                _buildProjectThemeColorSwatch(color: Colors.purple),
-                _buildProjectThemeColorSwatch(color: Colors.orange),
-                _buildProjectThemeColorSwatch(color: Colors.teal),
-                _buildProjectThemeColorSwatch(color: Colors.red),
-                _buildProjectThemeColorSwatch(color: Colors.limeAccent),
-                _buildProjectThemeColorSwatch(),
-                _buildProjectThemeColorSwatch(),
-                _buildProjectThemeColorSwatch(),
+                // --------------- Themes ---------------
+                for (var themeColor in _themes)
+                  _buildProjectThemeColorSwatch(
+                      color: themeColor,
+                      isSelected: _themeInputController.text ==
+                          themeColor.value.toString(),
+                      onChangeTheme: (color) {
+                        setState(() {
+                          _themeInputController.text = color.toString();
+                        });
+                      }),
               ],
             ),
             const SizedBox(height: 18.0),
@@ -99,7 +95,9 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
                   Project(
                     id: project?.id,
                     title: _titleInputController.text,
-                    description: _descriptionInputController.text,
+                    theme: _themeInputController.text != ""
+                        ? int.parse(_themeInputController.text)
+                        : null,
                   ),
                 );
                 Navigator.pop(context);
@@ -130,12 +128,27 @@ class _ProjectBottomSheetState extends State<ProjectBottomSheet> {
     );
   }
 
-  Container _buildProjectThemeColorSwatch({Color color = Colors.black}) {
-    return Container(
-      width: 30,
-      height: 30,
-      decoration:
-          BoxDecoration(color: color, borderRadius: BorderRadius.circular(6.0)),
+  GestureDetector _buildProjectThemeColorSwatch(
+      {Color color = Colors.black,
+      bool isSelected = false,
+      Function(int colorValue)? onChangeTheme}) {
+    double size = 35.0;
+    return GestureDetector(
+      onTap: () {
+        onChangeTheme?.call(color.value);
+      },
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(
+            color: isSelected ? kAccentColor : Colors.transparent,
+            width: 3.0,
+          ),
+          borderRadius: BorderRadius.circular(6.0),
+        ),
+      ),
     );
   }
 }

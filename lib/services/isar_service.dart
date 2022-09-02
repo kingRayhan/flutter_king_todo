@@ -19,7 +19,7 @@ class IsarDatabaseService {
       final isar = await Isar.open(
         schemas: [ProjectSchema],
         directory: appDir.path,
-        inspector: true,
+        // inspector: true,
       );
       return isar;
     }
@@ -34,6 +34,7 @@ class IsarDatabaseService {
       project.updatedAt ??= DateTime.now();
       var projectId = await isar.projects.put(project);
       print("Saved project with id: $projectId");
+      print(project);
     });
   }
 

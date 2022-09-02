@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:isar/isar.dart';
 
 part 'project.g.dart';
@@ -10,8 +8,7 @@ class Project {
   late int? id;
 
   late String title;
-  late String? description;
-  dynamic theme;
+  int? theme;
 
   late DateTime? createdAt;
   late DateTime? updatedAt;
@@ -19,7 +16,6 @@ class Project {
   Project({
     this.id,
     required this.title,
-    this.description,
     this.theme,
     this.createdAt,
     this.updatedAt,
@@ -27,6 +23,6 @@ class Project {
 
   @override
   String toString() {
-    return 'Project(id: $id, title: $title, description: $description, theme: $theme, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Project(id: $id, title: $title, theme: $theme, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

@@ -15,9 +15,9 @@ extension GetProjectCollection on Isar {
 const ProjectSchema = CollectionSchema(
   name: 'Project',
   schema:
-      '{"name":"Project","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"description","type":"String"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
+      '{"name":"Project","idName":"id","properties":[{"name":"createdAt","type":"Long"},{"name":"theme","type":"Long"},{"name":"title","type":"String"},{"name":"updatedAt","type":"Long"}],"indexes":[],"links":[]}',
   idName: 'id',
-  propertyIds: {'createdAt': 0, 'description': 1, 'title': 2, 'updatedAt': 3},
+  propertyIds: {'createdAt': 0, 'theme': 1, 'title': 2, 'updatedAt': 3},
   listProperties: {},
   indexIds: {},
   indexValueTypes: {},
@@ -62,12 +62,8 @@ void _projectSerializeNative(
   var dynamicSize = 0;
   final value0 = object.createdAt;
   final _createdAt = value0;
-  final value1 = object.description;
-  IsarUint8List? _description;
-  if (value1 != null) {
-    _description = IsarBinaryWriter.utf8Encoder.convert(value1);
-  }
-  dynamicSize += (_description?.length ?? 0) as int;
+  final value1 = object.theme;
+  final _theme = value1;
   final value2 = object.title;
   final _title = IsarBinaryWriter.utf8Encoder.convert(value2);
   dynamicSize += (_title.length) as int;
@@ -80,7 +76,7 @@ void _projectSerializeNative(
   final buffer = IsarNative.bufAsBytes(rawObj.buffer, size);
   final writer = IsarBinaryWriter(buffer, staticSize);
   writer.writeDateTime(offsets[0], _createdAt);
-  writer.writeBytes(offsets[1], _description);
+  writer.writeLong(offsets[1], _theme);
   writer.writeBytes(offsets[2], _title);
   writer.writeDateTime(offsets[3], _updatedAt);
 }
@@ -89,8 +85,8 @@ Project _projectDeserializeNative(IsarCollection<Project> collection, int id,
     IsarBinaryReader reader, List<int> offsets) {
   final object = Project(
     createdAt: reader.readDateTimeOrNull(offsets[0]),
-    description: reader.readStringOrNull(offsets[1]),
     id: id,
+    theme: reader.readLongOrNull(offsets[1]),
     title: reader.readString(offsets[2]),
     updatedAt: reader.readDateTimeOrNull(offsets[3]),
   );
@@ -105,7 +101,7 @@ P _projectDeserializePropNative<P>(
     case 0:
       return (reader.readDateTimeOrNull(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
@@ -120,8 +116,8 @@ dynamic _projectSerializeWeb(
   final jsObj = IsarNative.newJsObject();
   IsarNative.jsObjectSet(
       jsObj, 'createdAt', object.createdAt?.toUtc().millisecondsSinceEpoch);
-  IsarNative.jsObjectSet(jsObj, 'description', object.description);
   IsarNative.jsObjectSet(jsObj, 'id', object.id);
+  IsarNative.jsObjectSet(jsObj, 'theme', object.theme);
   IsarNative.jsObjectSet(jsObj, 'title', object.title);
   IsarNative.jsObjectSet(
       jsObj, 'updatedAt', object.updatedAt?.toUtc().millisecondsSinceEpoch);
@@ -137,8 +133,8 @@ Project _projectDeserializeWeb(
                 isUtc: true)
             .toLocal()
         : null,
-    description: IsarNative.jsObjectGet(jsObj, 'description'),
     id: IsarNative.jsObjectGet(jsObj, 'id'),
+    theme: IsarNative.jsObjectGet(jsObj, 'theme'),
     title: IsarNative.jsObjectGet(jsObj, 'title') ?? '',
     updatedAt: IsarNative.jsObjectGet(jsObj, 'updatedAt') != null
         ? DateTime.fromMillisecondsSinceEpoch(
@@ -159,10 +155,10 @@ P _projectDeserializePropWeb<P>(Object jsObj, String propertyName) {
                   isUtc: true)
               .toLocal()
           : null) as P;
-    case 'description':
-      return (IsarNative.jsObjectGet(jsObj, 'description')) as P;
     case 'id':
       return (IsarNative.jsObjectGet(jsObj, 'id')) as P;
+    case 'theme':
+      return (IsarNative.jsObjectGet(jsObj, 'theme')) as P;
     case 'title':
       return (IsarNative.jsObjectGet(jsObj, 'title') ?? '') as P;
     case 'updatedAt':
@@ -298,117 +294,6 @@ extension ProjectQueryFilter
     ));
   }
 
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionIsNull() {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.isNull,
-      property: 'description',
-      value: null,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.eq,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionGreaterThan(
-    String? value, {
-    bool caseSensitive = true,
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.gt,
-      include: include,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionLessThan(
-    String? value, {
-    bool caseSensitive = true,
-    bool include = false,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.lt,
-      include: include,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionBetween(
-    String? lower,
-    String? upper, {
-    bool caseSensitive = true,
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition.between(
-      property: 'description',
-      lower: lower,
-      includeLower: includeLower,
-      upper: upper,
-      includeUpper: includeUpper,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.startsWith,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.endsWith,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionContains(
-      String value,
-      {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.contains,
-      property: 'description',
-      value: value,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
-  QueryBuilder<Project, Project, QAfterFilterCondition> descriptionMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return addFilterConditionInternal(FilterCondition(
-      type: ConditionType.matches,
-      property: 'description',
-      value: pattern,
-      caseSensitive: caseSensitive,
-    ));
-  }
-
   QueryBuilder<Project, Project, QAfterFilterCondition> idIsNull() {
     return addFilterConditionInternal(FilterCondition(
       type: ConditionType.isNull,
@@ -457,6 +342,62 @@ extension ProjectQueryFilter
   }) {
     return addFilterConditionInternal(FilterCondition.between(
       property: 'id',
+      lower: lower,
+      includeLower: includeLower,
+      upper: upper,
+      includeUpper: includeUpper,
+    ));
+  }
+
+  QueryBuilder<Project, Project, QAfterFilterCondition> themeIsNull() {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.isNull,
+      property: 'theme',
+      value: null,
+    ));
+  }
+
+  QueryBuilder<Project, Project, QAfterFilterCondition> themeEqualTo(
+      int? value) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.eq,
+      property: 'theme',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Project, Project, QAfterFilterCondition> themeGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.gt,
+      include: include,
+      property: 'theme',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Project, Project, QAfterFilterCondition> themeLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return addFilterConditionInternal(FilterCondition(
+      type: ConditionType.lt,
+      include: include,
+      property: 'theme',
+      value: value,
+    ));
+  }
+
+  QueryBuilder<Project, Project, QAfterFilterCondition> themeBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return addFilterConditionInternal(FilterCondition.between(
+      property: 'theme',
       lower: lower,
       includeLower: includeLower,
       upper: upper,
@@ -636,20 +577,20 @@ extension ProjectQueryWhereSortBy on QueryBuilder<Project, Project, QSortBy> {
     return addSortByInternal('createdAt', Sort.desc);
   }
 
-  QueryBuilder<Project, Project, QAfterSortBy> sortByDescription() {
-    return addSortByInternal('description', Sort.asc);
-  }
-
-  QueryBuilder<Project, Project, QAfterSortBy> sortByDescriptionDesc() {
-    return addSortByInternal('description', Sort.desc);
-  }
-
   QueryBuilder<Project, Project, QAfterSortBy> sortById() {
     return addSortByInternal('id', Sort.asc);
   }
 
   QueryBuilder<Project, Project, QAfterSortBy> sortByIdDesc() {
     return addSortByInternal('id', Sort.desc);
+  }
+
+  QueryBuilder<Project, Project, QAfterSortBy> sortByTheme() {
+    return addSortByInternal('theme', Sort.asc);
+  }
+
+  QueryBuilder<Project, Project, QAfterSortBy> sortByThemeDesc() {
+    return addSortByInternal('theme', Sort.desc);
   }
 
   QueryBuilder<Project, Project, QAfterSortBy> sortByTitle() {
@@ -679,20 +620,20 @@ extension ProjectQueryWhereSortThenBy
     return addSortByInternal('createdAt', Sort.desc);
   }
 
-  QueryBuilder<Project, Project, QAfterSortBy> thenByDescription() {
-    return addSortByInternal('description', Sort.asc);
-  }
-
-  QueryBuilder<Project, Project, QAfterSortBy> thenByDescriptionDesc() {
-    return addSortByInternal('description', Sort.desc);
-  }
-
   QueryBuilder<Project, Project, QAfterSortBy> thenById() {
     return addSortByInternal('id', Sort.asc);
   }
 
   QueryBuilder<Project, Project, QAfterSortBy> thenByIdDesc() {
     return addSortByInternal('id', Sort.desc);
+  }
+
+  QueryBuilder<Project, Project, QAfterSortBy> thenByTheme() {
+    return addSortByInternal('theme', Sort.asc);
+  }
+
+  QueryBuilder<Project, Project, QAfterSortBy> thenByThemeDesc() {
+    return addSortByInternal('theme', Sort.desc);
   }
 
   QueryBuilder<Project, Project, QAfterSortBy> thenByTitle() {
@@ -718,13 +659,12 @@ extension ProjectQueryWhereDistinct
     return addDistinctByInternal('createdAt');
   }
 
-  QueryBuilder<Project, Project, QDistinct> distinctByDescription(
-      {bool caseSensitive = true}) {
-    return addDistinctByInternal('description', caseSensitive: caseSensitive);
-  }
-
   QueryBuilder<Project, Project, QDistinct> distinctById() {
     return addDistinctByInternal('id');
+  }
+
+  QueryBuilder<Project, Project, QDistinct> distinctByTheme() {
+    return addDistinctByInternal('theme');
   }
 
   QueryBuilder<Project, Project, QDistinct> distinctByTitle(
@@ -743,12 +683,12 @@ extension ProjectQueryProperty
     return addPropertyNameInternal('createdAt');
   }
 
-  QueryBuilder<Project, String?, QQueryOperations> descriptionProperty() {
-    return addPropertyNameInternal('description');
-  }
-
   QueryBuilder<Project, int?, QQueryOperations> idProperty() {
     return addPropertyNameInternal('id');
+  }
+
+  QueryBuilder<Project, int?, QQueryOperations> themeProperty() {
+    return addPropertyNameInternal('theme');
   }
 
   QueryBuilder<Project, String, QQueryOperations> titleProperty() {

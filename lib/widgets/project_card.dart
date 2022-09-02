@@ -9,16 +9,16 @@ class ProjectCard extends StatelessWidget {
   final Function(int id)? onEdit;
   final int? id;
   final String? title;
-  final String? description;
+  final int? theme;
 
   const ProjectCard({
     Key? key,
     this.title,
-    this.description,
     this.onTap,
     this.onDelete,
     this.onEdit,
     this.id,
+    this.theme,
   }) : super(key: key);
 
   @override
@@ -72,18 +72,9 @@ class ProjectCard extends StatelessWidget {
                       style:
                           const TextStyle(color: Colors.white, fontSize: 18.0),
                     ),
-                    if (description != null) const SizedBox(height: 6),
-                    if (description != null)
-                      Text(
-                        description ?? "",
-                        style: const TextStyle(
-                            color: Color(0xFF8A8A8A),
-                            fontSize: 16.0,
-                            height: 1.4),
-                      ),
                     const SizedBox(height: 6),
-                    const Text(
-                      "1 of 3 tasks",
+                    Text(
+                      "1 of 3 tasks ${theme}",
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 16.0),
                     )
@@ -93,8 +84,9 @@ class ProjectCard extends StatelessWidget {
                   width: 6.0,
                   height: 80.0,
                   decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(6.0)),
+                    color: Color(theme?.toInt() ?? 0xFF21B7CA),
+                    borderRadius: BorderRadius.circular(6.0),
+                  ),
                 )
               ],
             ),

@@ -19,13 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void initState() {
-    print("Home screen init");
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -58,10 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
               return ProjectCard(
                 id: snapshot.data![index].id,
                 title: snapshot.data![index].title,
-                description: snapshot.data![index].description,
                 onDelete: (id) => db.deleteProject(id),
                 onEdit: (id) =>
                     _buildBottomSheet(project: snapshot.data![index]),
+                theme: snapshot.data![index].theme,
               );
             },
           );
